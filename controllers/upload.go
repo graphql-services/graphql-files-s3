@@ -14,6 +14,8 @@ import (
 func UploadHandler(r *mux.Router, bucket string) error {
 
 	r.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
+		auth := r.Header.Get("authorization")
+
 		r.ParseMultipartForm(10 << 20)
 		file, header, err := r.FormFile("file")
 		if err != nil {
@@ -54,6 +56,10 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
+		}
+
+		if auth != "" {
+			w.Header().Set("authorization", auth)
 		}
 		w.Header().Set("content-type", "application/json")
 		w.Write(data)
