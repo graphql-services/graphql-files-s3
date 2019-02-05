@@ -14,6 +14,7 @@ COPY --from=builder /tmp/app /usr/local/bin/app
 
 # https://serverfault.com/questions/772227/chmod-not-working-correctly-in-docker
 RUN chmod +x /usr/local/bin/app
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 
 ENTRYPOINT []
 CMD [ "app", "start" ]
