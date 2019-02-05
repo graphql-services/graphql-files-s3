@@ -36,6 +36,7 @@ func StartCmd() cli.Command {
 			r := mux.NewRouter()
 			controller.HealthcheckHandler(r)
 			controller.UploadHandler(r, bucket)
+			controller.FilesHandler(r, bucket)
 
 			http.Handle("/", r)
 
