@@ -13,7 +13,7 @@ import (
 // UploadHandler ...
 func UploadHandler(r *mux.Router, bucket string) error {
 
-	r.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseMultipartForm(10 << 20)
 		file, header, err := r.FormFile("file")
 		if err != nil {
