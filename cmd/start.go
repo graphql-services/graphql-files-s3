@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	controller "github.com/graphql-services/graphql-files/controllers"
+	"github.com/rs/cors"
 	"github.com/urfave/cli"
 )
 
@@ -38,10 +39,10 @@ func StartCmd() cli.Command {
 			controller.UploadHandler(r, bucket)
 			controller.FilesHandler(r, bucket)
 
-			http.Handle("/", r)
+			handler := cors.Default().Handler(r)
 
 			fmt.Println("starting on port: " + port)
-			if err := http.ListenAndServe(":"+port, nil); err != nil {
+			if err := http.ListenAndServe(":"+port, handler); err != nil {
 				return cli.NewExitError(err.Error(), 1)
 			}
 
