@@ -39,7 +39,7 @@ func StartCmd() cli.Command {
 			controller.UploadHandler(r, bucket)
 			controller.FilesHandler(r, bucket)
 
-			handler := cors.Default().Handler(r)
+			handler := cors.AllowAll().Handler(r)
 
 			fmt.Println("starting on port: " + port)
 			if err := http.ListenAndServe(":"+port, handler); err != nil {
