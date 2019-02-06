@@ -44,8 +44,12 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		}
 
 		// Save in GraphQL
+		additionalData := map[string]interface{}{}
+		for key, value := range mux.Vars(r) {
+			additionalData[key] = value
+		}
 		ctx := context.Background()
-		response, err := src.SaveFile(ctx, f)
+		response, err := src.SaveFile(ctx, f, auth, additionalData)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -58,9 +62,6 @@ func UploadHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		if auth != "" {
-			w.Header().Set("authorization", auth)
-		}
 		w.Header().Set("content-type", "application/json")
 		w.Write(data)
 	}).Methods("POST")

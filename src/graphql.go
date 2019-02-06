@@ -30,13 +30,22 @@ const (
 )
 
 // SaveFile ...
-func SaveFile(ctx context.Context, f model.File) (model.File, error) {
+func SaveFile(ctx context.Context, f model.File, auth string, data map[string]interface{}) (model.File, error) {
 	var res struct {
 		Result model.File
 	}
 
+	data["name"] = f.Name
+	data["size"] = f.Size
+	data["uid"] = f.UID
+	data["url"] = f.URL
+	data["contentType"] = f.ContentType
 	req := graphql.NewRequest(graphqlSaveFile)
 	req.Var("input", f)
+
+	if auth != "" {
+		req.Header.Set("authorization", auth)
+	}
 	err := sendRequest(ctx, req, &res)
 
 	return res.Result, err

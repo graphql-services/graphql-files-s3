@@ -6,12 +6,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// UploadHandler ...
+// FilesHandler ...
 func FilesHandler(r *mux.Router, bucket string) error {
 
 	r.HandleFunc("/files/{uid}", func(w http.ResponseWriter, r *http.Request) {
+		auth := r.Header.Get("authorization")
 		uid := mux.Vars(r)["uid"]
-		w.Write([]byte(uid))
+		w.Write([]byte(uid + auth))
 	}).Methods("GET")
 
 	return nil
