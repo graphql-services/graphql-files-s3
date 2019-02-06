@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"os"
+	"path"
 
 	"github.com/satori/go.uuid"
 
@@ -26,11 +28,13 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		}
 		defer file.Close()
 
+		UID := uuid.Must(uuid.NewV4()).String()
 		f := model.File{
-			UID:         uuid.Must(uuid.NewV4()).String(),
+			UID:         UID,
 			Name:        header.Filename,
 			Size:        header.Size,
 			ContentType: header.Header.Get("Content-Type"),
+			URL:         path.Join(os.Getenv("HOST_URL"), UID),
 		}
 
 		// Upload to S3

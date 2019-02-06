@@ -52,6 +52,23 @@ func SaveFile(ctx context.Context, f model.File, auth string, data map[string]in
 	return res.Result, err
 }
 
+// FetchFile ...
+func FetchFile(ctx context.Context, uid, auth string) (*model.File, error) {
+	var res struct {
+		Result *model.File
+	}
+
+	req := graphql.NewRequest(graphqlFetchFile)
+	req.Var("uid", uid)
+
+	if auth != "" {
+		req.Header.Set("authorization", auth)
+	}
+	err := sendRequest(ctx, req, &res)
+
+	return res.Result, err
+}
+
 func sendRequest(ctx context.Context, req *graphql.Request, data interface{}) error {
 	URL := os.Getenv("GRAPHQL_URL")
 
