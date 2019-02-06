@@ -48,8 +48,8 @@ func UploadHandler(r *mux.Router, bucket string) error {
 
 		// Save in GraphQL
 		additionalData := map[string]interface{}{}
-		for key, value := range mux.Vars(r) {
-			additionalData[key] = value
+		for key, value := range r.URL.Query() {
+			additionalData[key] = value[0]
 		}
 		ctx := context.Background()
 		response, err := src.SaveFile(ctx, f, auth, additionalData)
