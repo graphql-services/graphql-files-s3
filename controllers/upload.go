@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/satori/go.uuid"
+
 	"github.com/gorilla/mux"
 	"github.com/graphql-services/graphql-files/model"
 	"github.com/graphql-services/graphql-files/src"
@@ -25,6 +27,7 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		defer file.Close()
 
 		f := model.File{
+			UID:         uuid.Must(uuid.NewV4()).String(),
 			Name:        header.Filename,
 			Size:        header.Size,
 			ContentType: header.Header.Get("Content-Type"),
@@ -33,7 +36,7 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		// Upload to S3
 		err = src.UploadToS3(src.UploadToS3Config{
 			Bucket:      bucket,
-			Key:         f.Name,
+			Key:         f.UID,
 			Body:        file,
 			Size:        f.Size,
 			ContentType: f.ContentType,

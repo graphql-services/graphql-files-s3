@@ -41,7 +41,7 @@ func SaveFile(ctx context.Context, f model.File, auth string, data map[string]in
 	data["url"] = f.URL
 	data["contentType"] = f.ContentType
 	req := graphql.NewRequest(graphqlSaveFile)
-	req.Var("input", f)
+	req.Var("input", data)
 
 	if auth != "" {
 		req.Header.Set("authorization", auth)
