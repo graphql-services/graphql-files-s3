@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 
@@ -29,12 +30,17 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		defer file.Close()
 
 		UID := uuid.Must(uuid.NewV4()).String()
+		hostURL, err := url.Parse(os.Getenv("HOST_URL"))
+		if err != nil {
+			panic(err)
+		}
+		hostURL.Path = path.Join(hostURL.Path, UID)
 		f := model.File{
 			UID:         UID,
 			Name:        header.Filename,
 			Size:        header.Size,
 			ContentType: header.Header.Get("Content-Type"),
-			URL:         path.Join(os.Getenv("HOST_URL"), UID),
+			URL:         hostURL.String(),
 		}
 
 		// Upload to S3
