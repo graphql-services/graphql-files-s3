@@ -3,6 +3,7 @@ package src
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/graphql-services/graphql-files/model"
@@ -59,9 +60,9 @@ func sendRequest(ctx context.Context, req *graphql.Request, data interface{}) er
 	}
 
 	client := graphql.NewClient(URL)
-	// client.Log = func(s string) {
-	// 	glog.Info(s)
-	// }
+	client.Log = func(s string) {
+		log.Print(s)
+	}
 
 	return client.Run(ctx, req, data)
 }
