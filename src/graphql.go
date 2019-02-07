@@ -21,7 +21,7 @@ const (
 		}
 	}`
 	graphqlFetchFile = `query file($uid: ID) {
-		file(filter: { uid: $uid }) {
+		result: file(filter: { uid: $uid }) {
 			id
 			uid
 			size
