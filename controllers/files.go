@@ -13,11 +13,11 @@ import (
 func FilesHandler(r *mux.Router, bucket string) error {
 
 	r.HandleFunc("/{uid}", func(w http.ResponseWriter, r *http.Request) {
-		auth := r.Header.Get("authorization")
+		token := r.URL.Query().Get("access_token")
 		uid := mux.Vars(r)["uid"]
 
 		ctx := context.Background()
-		file, err := src.FetchFile(ctx, uid, auth)
+		file, err := src.FetchFile(ctx, uid, "Bearer "+token)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
