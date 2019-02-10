@@ -3,8 +3,9 @@ package src
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/graphql-services/graphql-files/model"
 	"github.com/machinebox/graphql"
@@ -78,7 +79,7 @@ func sendRequest(ctx context.Context, req *graphql.Request, data interface{}) er
 
 	client := graphql.NewClient(URL)
 	client.Log = func(s string) {
-		log.Print(s)
+		log.Info(s)
 	}
 
 	return client.Run(ctx, req, data)
