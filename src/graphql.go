@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	graphqlSaveFile = `mutation createFile($input: FileRawCreateInput!) {
+	graphqlSaveFile = `mutation createFile($input: FileCreateInput!) {
 		result: createFile(input:$input) {
 			id
 			uid
