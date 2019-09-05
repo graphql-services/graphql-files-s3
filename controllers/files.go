@@ -14,6 +14,7 @@ func FilesHandler(r *mux.Router, bucket string) error {
 
 	r.HandleFunc("/{uid}", func(w http.ResponseWriter, r *http.Request) {
 		token := r.URL.Query().Get("access_token")
+		contentDisposition := r.URL.Query().Get("content-disposition")
 		uid := mux.Vars(r)["uid"]
 
 		ctx := context.Background()
@@ -39,6 +40,9 @@ func FilesHandler(r *mux.Router, bucket string) error {
 
 		w.Header().Set("content-type", file.ContentType)
 		w.Header().Set("content-size", string(file.Size))
+		if contentDisposition != "" {
+			w.Header().Set("content-disposition", contentDisposition)
+		}
 		io.Copy(w, s3Object.Body)
 	}).Methods("GET")
 
