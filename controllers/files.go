@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -28,22 +27,17 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		s3Object, err := src.GetS3Object(src.GetS3ObjectConfig{
-			Bucket: bucket,
-			Key:    uid,
-		})
+		if contentDisposition != "" {
+			contentDisposition += ";filename=" + file.Name
+		}
+
+		presignedURL, err := src.GetObjectPresignedURL(bucket, uid, contentDisposition)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		defer s3Object.Body.Close()
 
-		w.Header().Set("content-type", file.ContentType)
-		w.Header().Set("content-size", string(file.Size))
-		if contentDisposition != "" {
-			w.Header().Set("content-disposition", contentDisposition)
-		}
-		io.Copy(w, s3Object.Body)
+		http.Redirect(w, r, presignedURL, 301)
 	}).Methods("GET")
 
 	return nil

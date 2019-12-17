@@ -1,8 +1,8 @@
 package src
 
 import (
-	"io"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -22,44 +22,18 @@ func init() {
 	s3Client = s3.New(s)
 }
 
-// UploadToS3Config ...
-type UploadToS3Config struct {
-	Bucket      string
-	Key         string
-	Body        io.ReadSeeker
-	Size        int64
-	ContentType string //http.DetectContentType(buffer)
-}
-
-// UploadToS3 ...
-func UploadToS3(c UploadToS3Config) error {
-
-	_, err := s3Client.PutObject(&s3.PutObjectInput{
-		Bucket:             aws.String(c.Bucket),
-		Key:                aws.String(c.Key),
-		ACL:                aws.String("private"),
-		Body:               c.Body,
-		ContentLength:      aws.Int64(c.Size),
-		ContentType:        aws.String(c.ContentType),
-		ContentDisposition: aws.String("attachment"),
-		// ServerSideEncryption: aws.String("AES256"),
+func PutObjectPresignedURL(bucket, key string) (url string, err error) {
+	req, _ := s3Client.PutObjectRequest(&s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
 	})
-
-	return err
+	return req.Presign(15 * time.Minute)
 }
-
-// GetS3ObjectConfig ...
-type GetS3ObjectConfig struct {
-	Bucket string
-	Key    string
-}
-
-// GetS3Object ...
-func GetS3Object(c GetS3ObjectConfig) (*s3.GetObjectOutput, error) {
-	res, err := s3Client.GetObject(&s3.GetObjectInput{
-		Bucket: aws.String(c.Bucket),
-		Key:    aws.String(c.Key),
+func GetObjectPresignedURL(bucket, key, contentDisposition string) (url string, err error) {
+	req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
+		Bucket:                     aws.String(bucket),
+		Key:                        aws.String(key),
+		ResponseContentDisposition: aws.String(contentDisposition),
 	})
-
-	return res, err
+	return req.Presign(15 * time.Minute)
 }

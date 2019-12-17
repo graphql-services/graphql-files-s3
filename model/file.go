@@ -8,4 +8,5 @@ type File struct {
 	ContentType string `json:"contentType"`
 	URL         string `json:"url"`
 	Name        string `json:"name"`
+	UploadURL   string `json:"uploadURL"`
 }
