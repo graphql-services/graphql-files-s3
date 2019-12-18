@@ -25,7 +25,9 @@ push: login
 	# docker push $(GIT_TAG)
 	# docker push $(BUILD_TAG)
 	docker push $(TAG)
-	
+
+build-lambda-function:
+	GO111MODULE=on GOOS=linux go build -o main lambda/main.go && zip lambda.zip main && rm main
 
 build-local:
 	go get ./...
