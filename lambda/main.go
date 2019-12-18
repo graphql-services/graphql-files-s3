@@ -18,11 +18,14 @@ func main() {
 	}
 
 	r := mux.NewRouter()
+
 	controller.HealthcheckHandler(r)
 	controller.UploadHandler(r, bucket)
 	controller.FilesHandler(r, bucket)
 
 	handler := cors.AllowAll().Handler(r)
 
-	algnhsa.ListenAndServe(handler, nil)
+	algnhsa.ListenAndServe(handler, &algnhsa.Options{
+		UseProxyPath: true,
+	})
 }
