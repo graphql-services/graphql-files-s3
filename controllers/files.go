@@ -37,7 +37,7 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		http.Redirect(w, r, presignedURL, 301)
+		http.Redirect(w, r, presignedURL, 302)
 	}).Methods("GET")
 
 	return nil
