@@ -25,6 +25,7 @@ const (
 		result: file(filter: { uid: $uid }) {
 			id
 			uid
+			name
 			size
 			contentType
 		}
