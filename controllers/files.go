@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/graphql-services/graphql-files/src"
@@ -27,6 +28,9 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
+		if contentDisposition == "" && !strings.HasPrefix(file.ContentType, "image/") {
+			contentDisposition = "attachment"
+		}
 		if contentDisposition != "" {
 			contentDisposition += ";filename=" + file.Name
 		}
