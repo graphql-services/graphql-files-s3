@@ -2,10 +2,12 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/graphql-services/graphql-files/model"
 	"github.com/graphql-services/graphql-files/src"
 )
 
@@ -41,7 +43,9 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		http.Redirect(w, r, presignedURL, 302)
+		res := model.GetFileResponse{URL: presignedURL}
+
+		json.NewEncoder(w).Encode(res)
 	}).Methods("GET")
 
 	return nil

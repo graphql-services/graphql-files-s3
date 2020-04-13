@@ -15,8 +15,8 @@ import (
 )
 
 type UploadInput struct {
-	Filename string
-	Size int64
+	Filename    string
+	Size        int64
 	ContentType string
 }
 
@@ -33,7 +33,7 @@ func UploadHandler(r *mux.Router, bucket string) error {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-	
+
 		UID := uuid.Must(uuid.NewV4()).String()
 		hostURL, err := url.Parse(os.Getenv("HOST_URL"))
 		if err != nil {
@@ -41,14 +41,13 @@ func UploadHandler(r *mux.Router, bucket string) error {
 			return
 		}
 		hostURL.Path = path.Join(hostURL.Path, UID)
-		f := model.File{
+		f := model.UploadResponse{
 			UID:         UID,
 			Name:        input.Filename,
 			Size:        input.Size,
 			ContentType: input.ContentType,
 			URL:         hostURL.String(),
 		}
-
 
 		presignedUrl, err := src.PutObjectPresignedURL(bucket, UID)
 		if err != nil {
@@ -68,7 +67,7 @@ func UploadHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		response.UploadURL=presignedUrl
+		response.UploadURL = presignedUrl
 
 		json.NewEncoder(w).Encode(response)
 	}).Methods("POST")

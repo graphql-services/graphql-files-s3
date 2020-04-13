@@ -33,9 +33,9 @@ const (
 )
 
 // SaveFile ...
-func SaveFile(ctx context.Context, f model.File, auth string, data map[string]interface{}) (model.File, error) {
+func SaveFile(ctx context.Context, f model.UploadResponse, auth string, data map[string]interface{}) (model.UploadResponse, error) {
 	var res struct {
-		Result model.File
+		Result model.UploadResponse
 	}
 
 	data["name"] = f.Name
@@ -55,9 +55,9 @@ func SaveFile(ctx context.Context, f model.File, auth string, data map[string]in
 }
 
 // FetchFile ...
-func FetchFile(ctx context.Context, uid, auth string) (*model.File, error) {
+func FetchFile(ctx context.Context, uid, auth string) (*model.UploadResponse, error) {
 	var res struct {
-		Result *model.File
+		Result *model.UploadResponse
 	}
 
 	req := graphql.NewRequest(graphqlFetchFile)
