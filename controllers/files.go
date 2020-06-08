@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -30,11 +31,15 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		if contentDisposition == "" && !strings.HasPrefix(file.ContentType, "image/") {
-			contentDisposition = "attachment"
+		if contentDisposition == "" {
+			if strings.HasPrefix(file.ContentType, "image/") || file.ContentType == "application/pdf" {
+				contentDisposition = "inline"
+			} else {
+				contentDisposition = "attachment"
+			}
 		}
 		if contentDisposition != "" {
-			contentDisposition += ";filename=" + file.Name
+			contentDisposition += ";filename=" + url.QueryEscape(file.Name)
 		}
 
 		presignedURL, err := src.GetObjectPresignedURL(bucket, uid, contentDisposition)
