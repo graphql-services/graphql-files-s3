@@ -1,5 +1,5 @@
 OWNER=graphql
-IMAGE_NAME=files-upload
+IMAGE_NAME=files-s3
 QNAME=$(OWNER)/$(IMAGE_NAME)
 
 GIT_TAG=$(QNAME):$(TRAVIS_COMMIT)
