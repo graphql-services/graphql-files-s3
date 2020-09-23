@@ -4,9 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"net/url"
-	"os"
-	"path"
 
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
@@ -35,21 +32,18 @@ func UploadHandler(r *mux.Router, bucket string) error {
 		}
 
 		UID := uuid.Must(uuid.NewV4()).String()
-		hostURL, err := url.Parse(os.Getenv("HOST_URL"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		hostURL.Path = path.Join(hostURL.Path, UID)
 		f := model.UploadResponse{
 			UID:         UID,
 			Name:        input.Filename,
 			Size:        input.Size,
 			ContentType: input.ContentType,
-			URL:         hostURL.String(),
 		}
 
-		presignedUrl, err := src.PutObjectPresignedURL(bucket, UID)
+		presignedURL, err := src.PutObjectPresignedURL(bucket, UID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -67,7 +61,7 @@ func UploadHandler(r *mux.Router, bucket string) error {
 			return
 		}
 
-		response.UploadURL = presignedUrl
+		response.UploadURL = presignedURL
 
 		json.NewEncoder(w).Encode(response)
 	}).Methods("POST")

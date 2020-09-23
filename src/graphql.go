@@ -15,16 +15,14 @@ const (
 	graphqlSaveFile = `mutation createFile($input: FileCreateInput!) {
 		result: createFile(input:$input) {
 			id
-			uid
 			size
 			contentType
 			url
 		}
 	}`
-	graphqlFetchFile = `query file($uid: ID) {
-		result: file(filter: { uid: $uid }) {
+	graphqlFetchFile = `query file($id: ID!) {
+		result: file(id: $id) {
 			id
-			uid
 			name
 			size
 			contentType
@@ -41,7 +39,6 @@ func SaveFile(ctx context.Context, f model.UploadResponse, auth string, data map
 	data["name"] = f.Name
 	data["size"] = f.Size
 	data["uid"] = f.UID
-	data["url"] = f.URL
 	data["contentType"] = f.ContentType
 	req := graphql.NewRequest(graphqlSaveFile)
 	req.Var("input", data)
