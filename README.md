@@ -1,6 +1,6 @@
 # graphql-files-s3
 
-[![Build Status](https://travis-ci.org/graphql-services/graphql-files-upload.svg?branch=master)](https://travis-ci.org/graphql-services/graphql-files-upload)
+[![Build Status](https://travis-ci.org/graphql-services/graphql-files-s3.svg?branch=master)](https://travis-ci.org/graphql-services/graphql-files-s3)
 
 Service for handling file uploads/downloads in cooperation with GraphQL API.
 
