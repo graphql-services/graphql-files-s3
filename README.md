@@ -18,9 +18,9 @@ query getFile($id: ID!) {
 mutation createFile($input: FileCreateInput!) {
     result: createFile(input:$input) {
         id
+        name
         size
         contentType
-        url
     }
 }
 ```

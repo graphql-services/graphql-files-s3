@@ -15,9 +15,9 @@ const (
 	graphqlSaveFile = `mutation createFile($input: FileCreateInput!) {
 		result: createFile(input:$input) {
 			id
+			name
 			size
 			contentType
-			url
 		}
 	}`
 	graphqlFetchFile = `query file($id: ID!) {
