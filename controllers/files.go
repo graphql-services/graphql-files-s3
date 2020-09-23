@@ -15,13 +15,19 @@ import (
 // FilesHandler ...
 func FilesHandler(r *mux.Router, bucket string) error {
 
-	r.HandleFunc("/{uid}", func(w http.ResponseWriter, r *http.Request) {
-		token := r.URL.Query().Get("access_token")
+	r.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		authorizationHeader := r.Header.Get("authorization")
+		if authorizationHeader == "" {
+			token := r.URL.Query().Get("access_token")
+			if token != "" {
+				authorizationHeader = "Bearer " + token
+			}
+		}
 		contentDisposition := r.URL.Query().Get("content-disposition")
-		uid := mux.Vars(r)["uid"]
+		id := mux.Vars(r)["id"]
 
 		ctx := context.Background()
-		file, err := src.FetchFile(ctx, uid, "Bearer "+token)
+		file, err := src.FetchFile(ctx, id, authorizationHeader)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -42,7 +48,7 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			contentDisposition += ";filename=" + url.QueryEscape(file.Name)
 		}
 
-		presignedURL, err := src.GetObjectPresignedURL(bucket, uid, contentDisposition)
+		presignedURL, err := src.GetObjectPresignedURL(bucket, id, contentDisposition)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

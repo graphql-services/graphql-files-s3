@@ -2,7 +2,7 @@ package model
 
 // UploadResponse ...
 type UploadResponse struct {
-	UID         string `json:"uid"`
+	ID          string `json:"ID"`
 	Name        string `json:"name"`
 	Size        int64  `json:"size"`
 	ContentType string `json:"contentType"`

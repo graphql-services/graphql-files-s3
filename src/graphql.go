@@ -36,9 +36,9 @@ func SaveFile(ctx context.Context, f model.UploadResponse, auth string, data map
 		Result model.UploadResponse
 	}
 
+	data["id"] = f.ID
 	data["name"] = f.Name
 	data["size"] = f.Size
-	data["uid"] = f.UID
 	data["contentType"] = f.ContentType
 	req := graphql.NewRequest(graphqlSaveFile)
 	req.Var("input", data)
@@ -52,13 +52,13 @@ func SaveFile(ctx context.Context, f model.UploadResponse, auth string, data map
 }
 
 // FetchFile ...
-func FetchFile(ctx context.Context, uid, auth string) (*model.UploadResponse, error) {
+func FetchFile(ctx context.Context, id, auth string) (*model.UploadResponse, error) {
 	var res struct {
 		Result *model.UploadResponse
 	}
 
 	req := graphql.NewRequest(graphqlFetchFile)
-	req.Var("uid", uid)
+	req.Var("id", id)
 
 	if auth != "" {
 		req.Header.Set("authorization", auth)

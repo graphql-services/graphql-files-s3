@@ -4,7 +4,7 @@
 
 Service for handling file uploads/downloads in cooperation with GraphQL API.
 
-Works seamlessly with [graphql-files service](https://github.com/graphql-services/graphql-files) or with any other GraphQL API containing following query/mutation:
+Works seamlessly with [graphql-files service](https://github.com/graphql-services/graphql-files) or with any other GraphQL API containing following query/mutation/input:
 
 ```
 query getFile($id: ID!) {
@@ -22,6 +22,13 @@ mutation createFile($input: FileCreateInput!) {
         size
         contentType
     }
+}
+
+input FileCreateInput {
+  id: ID
+  name: String
+  size: Int
+  contentType: String
 }
 ```
 
