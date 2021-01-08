@@ -7,7 +7,7 @@ on:
       - v*
 
 jobs:
-  build:
+  build-lambda:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -56,3 +56,23 @@ jobs:
           asset_path: release/lambda.zip
           asset_name: lambda.zip
           asset_content_type: application/zip
+  build-docker:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.13
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make build
+
+      - name: Push
+        run: make tag && make push
