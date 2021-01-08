@@ -3,9 +3,12 @@ package controller
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/graphql-services/graphql-files/model"
@@ -24,7 +27,18 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			}
 		}
 		contentDisposition := r.URL.Query().Get("content-disposition")
+		expire := r.URL.Query().Get("expire")
 		id := mux.Vars(r)["id"]
+
+		expiration := 15 * time.Minute
+		if expire != "" {
+			seconds, err := strconv.Atoi(expire)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("invalid expire attribute, error: %s", err.Error()), http.StatusBadRequest)
+				return
+			}
+			expiration = time.Second * time.Duration(seconds)
+		}
 
 		ctx := context.Background()
 		file, err := src.FetchFile(ctx, id, authorizationHeader)
@@ -48,7 +62,7 @@ func FilesHandler(r *mux.Router, bucket string) error {
 			contentDisposition += ";filename=" + url.QueryEscape(file.Name)
 		}
 
-		presignedURL, err := src.GetObjectPresignedURL(bucket, id, contentDisposition)
+		presignedURL, err := src.GetObjectPresignedURL(bucket, id, contentDisposition, expiration)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

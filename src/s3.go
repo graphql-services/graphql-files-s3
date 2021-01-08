@@ -29,11 +29,11 @@ func PutObjectPresignedURL(bucket, key string) (url string, err error) {
 	})
 	return req.Presign(15 * time.Minute)
 }
-func GetObjectPresignedURL(bucket, key, contentDisposition string) (url string, err error) {
+func GetObjectPresignedURL(bucket, key, contentDisposition string, expiration time.Duration) (url string, err error) {
 	req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
 		Bucket:                     aws.String(bucket),
 		Key:                        aws.String(key),
 		ResponseContentDisposition: aws.String(contentDisposition),
 	})
-	return req.Presign(15 * time.Minute)
+	return req.Presign(expiration)
 }
