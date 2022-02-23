@@ -15,6 +15,7 @@ type UploadInput struct {
 	Filename    string
 	Size        int64
 	ContentType string
+	Status      string
 }
 
 // UploadHandler ...
@@ -41,6 +42,7 @@ func UploadHandler(r *mux.Router, bucket string) error {
 			Name:        input.Filename,
 			Size:        input.Size,
 			ContentType: input.ContentType,
+			Status:      input.Status,
 		}
 
 		presignedURL, err := src.PutObjectPresignedURL(bucket, ID)

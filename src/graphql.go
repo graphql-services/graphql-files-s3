@@ -18,6 +18,7 @@ const (
 			name
 			size
 			contentType
+			status
 		}
 	}`
 	graphqlFetchFile = `query file($id: ID!) {
@@ -26,6 +27,7 @@ const (
 			name
 			size
 			contentType
+			status
 		}
 	}`
 )
@@ -40,6 +42,7 @@ func SaveFile(ctx context.Context, f model.UploadResponse, auth string, data map
 	data["name"] = f.Name
 	data["size"] = f.Size
 	data["contentType"] = f.ContentType
+	data["status"] = f.Status
 	req := graphql.NewRequest(graphqlSaveFile)
 	req.Var("input", data)
 

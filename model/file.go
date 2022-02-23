@@ -6,6 +6,7 @@ type UploadResponse struct {
 	Name        string `json:"name"`
 	Size        int64  `json:"size"`
 	ContentType string `json:"contentType"`
+	Status      string `json:"status"`
 
 	UploadURL string `json:"uploadURL"`
 }
