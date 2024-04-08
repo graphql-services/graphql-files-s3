@@ -3,7 +3,7 @@ module github.com/graphql-services/graphql-files
 go 1.13
 
 require (
-	github.com/akrylysov/algnhsa v0.12.1
+	github.com/akrylysov/algnhsa v1.1.0
 	github.com/aws/aws-sdk-go v1.26.4
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/gorilla/mux v1.7.3
